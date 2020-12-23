@@ -54,7 +54,7 @@ class Service:
         for oid in oids:
             snmptrap = SnmpTrap()  # self,ipAddress,idOid,communityName,port
             result = snmptrap.get(host[2], oid[2],  host[5], host[3])
-            if(len(result) != 0 or "No" not in result.split()):  # snmp oid not work
+            if(len(str(result)) != 0 or "No" not in str(result).split()):  # snmp oid not work
                 listOid = str(host[8]).split(",") if len(str(host[8]).split(",")) > 0 else [host[8]]
                 listOid = ",".join(listOid)
                 # print(listOid)
