@@ -18,12 +18,12 @@ class ClientThread(threading.Thread):
         self.ping = Ping()
         self.host = host
 
-    def getValueOid(self, host):
+    def getValueOid(self):
         sqline = sqLine.Sqline()
-        host_oid = sqline.raw("SELECT host_oid.id from host_oid INNER JOIN oid ON host_oid.idOid = oid.idOid WHERE host_oid.idHost='{}'".format(host[0]))
+        host_oid = sqline.raw("SELECT host_oid.id from host_oid INNER JOIN oid ON host_oid.idOid = oid.idOid WHERE host_oid.idHost='{}'".format(self.host[0]))
         for oid in host_oid:
             snmptrap = SnmpTrap()# self,ipAddress,idOid,communityName,port
-            result = snmptrap.get(host[2], oid[2],  host[5], host[3])
+            result = snmptrap.get(self.host[2], oid[2], self.host[5], self.host[3])
             if(self.oidIsWorking(result)):  # snmp oid not work
                 value = 'str(result).split("=")[1].replace(" ", "")'
                 sqline = sqLine.Sqline()
@@ -61,7 +61,7 @@ class ClientThread(threading.Thread):
         if self.ping.ping(self.host[2]):
             sqline = sqLine.Sqline()
             sqline.execute("UPDATE host set activeAtatus = 1 where id = '{}'".format(self.host[0]))
-            self.getValueOid(self.host)
+            self.getValueOid()
         else:
             sqline = sqLine.Sqline()
             sqline.execute("UPDATE host set activeAtatus = 0 where id = '{}'".format(self.host[0]))
