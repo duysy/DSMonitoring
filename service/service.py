@@ -76,7 +76,7 @@ class Service:
                     id, idHost, oid[0], value, 1))
 
     def oidIsWorking(self, result):
-        if("=" in str(result).split()):
+        if("No" not in str(result).split() and len(result)>0):
             return True
         return False
 
