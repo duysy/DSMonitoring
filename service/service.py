@@ -20,12 +20,12 @@ class ClientThread(threading.Thread):
 
     def getValueOid(self):
         sqline = sqLine.Sqline()
-        host_oid = sqline.raw("SELECT host_oid.id from host_oid INNER JOIN oid ON host_oid.idOid = oid.idOid WHERE host_oid.idHost='{}'".format(self.host[0]))
+        host_oid = sqline.raw("SELECT host_oid.id,oid.oid from host_oid INNER JOIN oid ON host_oid.idOid = oid.idOid WHERE host_oid.idHost='{}'".format(self.host[0]))
         for oid in host_oid:
             snmptrap = SnmpTrap()# self,ipAddress,idOid,communityName,port
-            result = snmptrap.get(self.host[2], oid[2], self.host[5], self.host[3])
+            result = snmptrap.get(self.host[2], oid[1], self.host[5], self.host[3])
             if(self.oidIsWorking(result)):  # snmp oid not work
-                value = 'str(result).split("=")[1].replace(" ", "")'
+                value = str(result).split("=")[1].replace(" ", "")
                 sqline = sqLine.Sqline()
                 sqline.execute("UPDATE host_oid SET value = '{}' WHERE id = '{}' ;".format(value, oid[0]))
                 idHostOid=oid[0]

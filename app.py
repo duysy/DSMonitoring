@@ -4,7 +4,7 @@ from controller.monitoring import Monitoring
 from service.service import Service
 
 app = Flask(__name__, static_url_path='/assets', static_folder='assets')
-
+import sqLine
 configuration = Configuration()
 monitoring = Monitoring()
 service = Service()
@@ -79,7 +79,14 @@ def history_notification():
 def list_notification():
     return monitoring.list_notification()
 
-
+@app.route('/gettable/<table>')
+def gettable(table):
+    sqline = sqLine.Sqline()
+    data = sqline.raw("Select * from {}".format(table))
+    result = []
+    for i in data:
+        result.append(i) 
+    return str(result)
 
 
 @app.route('/user/<username>')
