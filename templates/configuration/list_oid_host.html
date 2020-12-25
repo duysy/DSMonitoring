@@ -185,31 +185,23 @@
                                 <tr>
                                     <th scope="col">#</th>
                                     <th scope="col">Name</th>
-                                    <th scope="col">IP interface</th>
-                                    <th scope="col">PORT</th>
-                                    <th scope="col">Community</th>
-                                    <th scope="col">Available</th>
-                                    <th scope="col">Discover</th>
-                                    <th scope="col">Graphics</th>
-                                    <th scope="col">Actions</th>
+                                    <th scope="col">Oid</th>
+                                    <th scope="col">Unit</th>
+                                    <th scope="col">Value</th>
+                                    <th scope="col">Add Trigger</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {% for host in hosts %}
+                                {% for oid in oids %}
                                 <tr>
                                     <th scope="row">{{ loop.index }}</th>
+                                    <td>{{ oid[2] }}</td>
+                                    <td>{{ oid[3] }}</td>
+                                    <td>{{ oid[4] }}</td>
+                                    <td>{{ oid[5] }}</td>
                                     <td>
-                                        <a href="/list-oid-host?idHost={{host[0]}}">{{ host[1] }}</a>
+                                        <a href="/add-host-oid-trigger?idHostOid={{ oid[0] }}">Add Trigger</a>
                                     </td>
-                                    <td>{{ host[2] }}</td>
-                                    <td>{{ host[3] }}</td>
-                                    <td>{{ host[5] }}</td>
-                                    <td>{{ host[4] }}</td>
-
-                                    <td>
-                                        <a href="/host-discover?idHost={{ host[0] }}">Discover({{ host[8] }})</a>
-                                    </td>
-                                    <td>{{ host[4] }}</td>
                                     <td>
                                         <span style="overflow: visible; position: relative; width: 130px;">
                                             <div class="dropdown dropdown-inline">
@@ -235,7 +227,7 @@
                                                         </svg>
                                                     </span>
                                         </a>
-                                        <a href="/del-host-snmp?idHost={{ host[0] }}" class="btn btn-sm btn-default btn-text-primary btn-hover-primary btn-icon" title="Delete">
+                                        <a href="/del-oid-snmp?idOid={{oid[0]}}" class="btn btn-sm btn-default btn-text-primary btn-hover-primary btn-icon" title="Delete">
                                             <span class="svg-icon svg-icon-md">
                                                         <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
                                                             <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">

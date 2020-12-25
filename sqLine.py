@@ -1,4 +1,5 @@
 import sqlite3
+import time
 class Sqline:
     def __init__(self):
         self.conn = sqlite3.connect("db.db")
@@ -9,9 +10,15 @@ class Sqline:
         self.conn.commit()
         self.conn.close()
     def raw(self,sql):
-        cursor  = self.conn.execute(sql)
-        # self.conn.close()
-        return cursor
+        with self.conn:
+            cur = self.conn.cursor()
+            cur.execute(sql)
+            res = cur.fetchall()
+        if self.conn:
+            self.conn.close()
+        return res
+    def close(self):
+        self.conn.close()
 
 # sqline = sqLine()
 # hosts = sqline.raw("SELECT * from host")

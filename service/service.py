@@ -1,5 +1,6 @@
 import threading
 import time
+import uuid
 from threading import Thread
 import os
 import sqLine
@@ -11,25 +12,34 @@ from .snmptrap import SnmpTrap
 
 
 class ClientThread(threading.Thread):
-    def __init__(self, idHost, ipAddress):
+    def __init__(self, host, ipAddress):
         threading.Thread.__init__(self)
         self.ping = Ping()
-        self.idHost = idHost
-        self.ipAddress = ipAddress
+        self.host = host
 
+    def getValueOid(self, host):
+        sqline = sqLine.Sqline()
+        oids = sqline.raw("SELECT host_oid.id from host_oid INNER JOIN oid ON host_oid.idOid = oid.idOid WHERE host_oid.idHost='{}'".format(host[0]))
+        for oid in oids:
+            snmptrap = SnmpTrap()# self,ipAddress,idOid,communityName,port
+            result = snmptrap.get(host[2], oid[2],  host[5], host[3])
+            if(not self.oidIsWorking(result)):  # snmp oid not work
+                value = 'str(result).split("=")[1].replace(" ", "")'
+                sqline = sqLine.Sqline()
+                sqline.execute("UPDATE host_oid SET value = '{}' WHERE id = '{}' ;".format(value, oid[0]))
     def run(self):
         time.sleep(5)
-        sqline = sqLine.Sqline()
-        if self.ping.ping(self.ipAddress):
-            sqline.execute(
-                "UPDATE host set activeAtatus = 1 where id = '{}'".format(self.idHost))
+        if self.ping.ping(self.host[2]):
+            sqline = sqLine.Sqline()
+            sqline.execute("UPDATE host set activeAtatus = 1 where id = '{}'".format(self.idHost))
+            getValueOid(self.host)
         else:
-            sqline.execute(
-                "UPDATE host set activeAtatus = 0 where id = '{}'".format(self.idHost))
+            sqline.execute("UPDATE host set activeAtatus = 0 where id = '{}'".format(self.idHost))
 
 
 class Service:
-    def test(self):
+    def start(self):
+        print("Start service")
         prosess = Thread(target=self.run, args=[])
         prosess.start()
 
@@ -39,29 +49,37 @@ class Service:
             sqline = sqLine.Sqline()
             host = sqline.raw("SELECT * from host")
             for i in host:
-                idHost = str(i[0])
-                ipAddress = str(i[2])
-                newthread = ClientThread(idHost, ipAddress)
+                newthread = ClientThread(host, ipAddress)
                 newthread.start()
+
+    
 
     def discover(self, idHost):
         host = ""
         sqline = sqLine.Sqline()
         oids = sqline.raw("SELECT * from oid")
+        sqline = sqLine.Sqline()
         hosts = sqline.raw("SELECT * from host WHERE id = '{}'".format(idHost))
+        sqline = sqLine.Sqline()
+        sqline.execute("DELETE FROM host_oid WHERE idHost = '{}'".format(
+            idHost))  # delete all item from host_oid
         for host in hosts:
             host = host
         for oid in oids:
             snmptrap = SnmpTrap()  # self,ipAddress,idOid,communityName,port
             result = snmptrap.get(host[2], oid[2],  host[5], host[3])
-            if(len(str(result)) != 0 or "No" not in str(result).split()):  # snmp oid not work
-                listOid = str(host[8]).split(",") if len(str(host[8]).split(",")) > 0 else [host[8]]
-                listOid = ",".join(listOid)
-                # print(listOid)
-                # print("UPDATE host set snmpOid = '{}' where id = '{}'".format(listOid,idHost))
+            if(self.oidIsWorking(result)):  # snmp oid not work
+                value = str(result).split("=")[1].replace(" ", "")
                 sqline = sqLine.Sqline()
-                sqline.execute(
-                    "UPDATE host set snmpOid = '{}' where id = '{}'".format(listOid, idHost))
-            # print(oid[2])
+                id = uuid.uuid1()
+                sqline.execute("INSERT INTO host_oid (id,idHost, idOid, value,isWorking) VALUES ( '{}','{}', '{}', '{}',{})".format(
+                    id, idHost, oid[0], value, 1))
+
+    def oidIsWorking(self, result):
+        if("=" in str(result).split()):
+            return True
+        return False
+
+
 # service = Service()
 # service.discover("a03201b8-43ab-11eb-a0e9-f01faf2cabdc")
