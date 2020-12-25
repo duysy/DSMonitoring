@@ -66,6 +66,10 @@ def list_host():
 def list_oid():
     return monitoring.list_oid()
 
+@app.route("/history-notification")
+def history_notification():
+    return monitoring.history_notification()
+
 
 
 
@@ -83,5 +87,5 @@ def login():
 
 
 if __name__ == "__main__":
-    # service.start()
+    service.start()
     app.run(host='0.0.0.0', debug=True)

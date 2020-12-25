@@ -11,3 +11,7 @@ class Monitoring:
         sqline = sqLine.Sqline()
         oids = sqline.raw("SELECT * from oid")
         return render_template('monitoring/list_oid.html',oids=oids)
+    def history_notification(self):
+        sqline = sqLine.Sqline()
+        history_notifications = sqline.raw("SELECT * from history_notification")
+        return render_template('monitoring/history_notification.html',history_notifications=history_notifications)
