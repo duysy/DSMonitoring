@@ -105,3 +105,25 @@ class Configuration:
             sqline = sqLine.Sqline()
             notifications = sqline.raw("SELECT * from notification")
             return render_template('configuration/add_host_oid_trigger.html',idHostOid=idHostOid,notifications=notifications)
+###############################################################################################
+    def add_notification(self):
+        if request.method == 'POST':
+            id = uuid.uuid1()
+            name = request.form['name']
+            type_ = request.form['type']
+            content = request.form['content']
+            emailaddress = request.form['emailaddress']
+            password = request.form['password']
+            toemail = request.form['toemail']
+            sqline = sqLine.Sqline()
+            sqline.execute("INSERT INTO notification(id,name,type,content,emailAddress,passwork,toEmail) VALUES ('{}', '{}', '{}','{}', '{}', '{}','{}')".format(id,name,type_,content,emailaddress,password,toemail))
+            return redirect("/list-notification")
+        else:
+            return render_template('configuration/add_notification.html')
+    def del_notification(self):
+        if request.method == 'GET':
+            id = request.args.get('id')
+            sqline = sqLine.Sqline()
+            sqline.execute("DELETE FROM notification WHERE id = '{}'".format(id))
+            return redirect("/list-notification")
+

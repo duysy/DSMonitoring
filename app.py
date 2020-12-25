@@ -54,8 +54,13 @@ def list_oid_host():
 @app.route("/add-host-oid-trigger", methods=['GET', 'POST'])
 def add_host_oid_trigger():
     return configuration.add_host_oid_trigger()
-
+@app.route("/add-notification", methods=['GET', 'POST'])
+def add_notification():
+    return configuration.add_notification()
     
+@app.route("/del-notification", methods=['GET', 'POST'])
+def del_notification():
+    return configuration.del_notification()
 
 @app.route("/list-host")
 def list_host():
@@ -69,6 +74,10 @@ def list_oid():
 @app.route("/history-notification")
 def history_notification():
     return monitoring.history_notification()
+
+@app.route("/list-notification")
+def list_notification():
+    return monitoring.list_notification()
 
 
 
@@ -87,5 +96,5 @@ def login():
 
 
 if __name__ == "__main__":
-    service.start()
+    # service.start()
     app.run(host='0.0.0.0', debug=True)
