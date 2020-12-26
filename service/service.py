@@ -67,11 +67,27 @@ class ClientThread(threading.Thread):
         time.sleep(5)
         if self.ping.ping(self.host[2]):
             sqline = sqLine.Sqline()
-            sqline.execute("UPDATE host set activeAtatus = 1, lastTime='{}' where id = '{}'".format(time.time(),self.host[0]))
+            sqline.execute("UPDATE host set activeAtatus = 1 where id = '{}'".format(self.host[0]))
             self.getValueOid()
         else:
             sqline = sqLine.Sqline()
-            sqline.execute("UPDATE host set activeAtatus = 0 where id = '{}'".format(self.host[0]))
+            host = sqline.raw("SELECT * from host WHERE idHostOid='{}'".format(idHostOid))
+            lastTimeHost = host[0][8]
+            if time.time() - lastTimeHost > 1000:
+                emailAddress = "duysyduysyduysy1@gmail.com"
+                passwork = "1h3j6n3j8l9n5k2h6j"
+                toEmail = "duyduysysy@gmail.com"
+                subject= "Cant connect to host"
+                content = "Cant connect to host with :{}".format(str(host[0]))
+                print(emailAddress,passwork,toEmail)
+                smtpemail =SmtpEmail(emailAddress,passwork)
+                if(smtpemail.sendEmail(toEmail,subject,content)):
+                    id = uuid.uuid1()
+                    sqline = sqLine.Sqline()
+                    sqline.execute("INSERT INTO history_notification(id,nameProblem,content,time) VALUES ('{}', '{}', '{}','{}')".format(id,subject, content,time.time()))
+
+                    sqline = sqLine.Sqline()
+                    sqline.execute("UPDATE host set activeAtatus = 0 ,lastTime='{}' where id = '{}'".format(time.time(),self.host[0]))
 
 
 class Service:
