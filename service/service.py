@@ -71,7 +71,7 @@ class ClientThread(threading.Thread):
             self.getValueOid()
         else:
             sqline = sqLine.Sqline()
-            host = sqline.raw("SELECT * from host WHERE id='{}'".format(idHostOid))
+            host = sqline.raw("SELECT * from host WHERE id='{}'".format(self.host[0]))
             lastTimeHost = host[0][8]
             if time.time() - lastTimeHost > 1000:
                 emailAddress = "duysyduysyduysy1@gmail.com"
