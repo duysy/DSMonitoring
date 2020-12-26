@@ -105,7 +105,9 @@ class Configuration:
             idHostOid = request.args.get('idHostOid')
             sqline = sqLine.Sqline()
             notifications = sqline.raw("SELECT * from notification")
-            return render_template('configuration/add_host_oid_trigger.html',idHostOid=idHostOid,notifications=notifications)
+            sqline = sqLine.Sqline()
+            triggers = sqline.raw("SELECT * from trigger WHERE idHostOid='{}'".format(idHostOid))
+            return render_template('configuration/add_host_oid_trigger.html',idHostOid=idHostOid,notifications=notifications,triggers=triggers)
 ###############################################################################################
     def add_notification(self):
         if request.method == 'POST':

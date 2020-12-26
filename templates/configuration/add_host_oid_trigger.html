@@ -114,6 +114,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-10">
+                    <!-- Beggin::Table -->
                     <div class="card card-custom gutter-b example example-compact">
                         <div class="card-header">
                             <h3 class="card-title">Base Controls</h3>
@@ -125,12 +126,58 @@
                             </div>
                         </div>
                         <!--begin::Form-->
-                        <form method="POST" action="/add-host-oid-trigger">
+                        <div class="card card-custom gutter-b">
                             <div class="card-body">
-                                <div class="form-group mb-8">
-                                    <div class="alert alert-custom alert-default" role="alert">
-                                        <div class="alert-icon">
-                                            <span class="svg-icon svg-icon-primary svg-icon-xl">
+                                <!--begin: Datatable-->
+                                <div class="datatable datatable-bordered datatable-head-custom datatable-default datatable-primary datatable-loaded" id="kt_datatable" style="">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">#</th>
+                                                <th scope="col">Notification</th>
+                                                <th scope="col">Trigger</th>
+                                                <th scope="col">lastTime</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for host in triggers %}
+                                            <tr>
+                                                <th scope="row">{{ loop.index }}</th>
+                                                <td>{{ host[2] }}</td>
+                                                <td>{{ host[3] }}</td>
+                                                <td>{{ host[4] }}</td>
+                                                <td>
+                                                    <span style="overflow: visible; position: relative; width: 130px;">
+                                                    <div class="dropdown dropdown-inline">
+                                                    <a href="/del-host-snmp?idHost={{ host[0] }}" class="btn btn-sm btn-default btn-text-primary btn-hover-primary btn-icon" title="Delete">
+                                                        <span class="svg-icon svg-icon-md">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+                                                                <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                                                <rect x="0" y="0" width="24" height="24"></rect>
+                                                                <path d="M6,8 L6,20.5 C6,21.3284271 6.67157288,22 7.5,22 L16.5,22 C17.3284271,22 18,21.3284271 18,20.5 L18,8 L6,8 Z" fill="#000000" fill-rule="nonzero"></path>
+                                                                <path d="M14,4.5 L14,4 C14,3.44771525 13.5522847,3 13,3 L11,3 C10.4477153,3 10,3.44771525 10,4 L10,4.5 L5.5,4.5 C5.22385763,4.5 5,4.72385763 5,5 L5,5.5 C5,5.77614237 5.22385763,6 5.5,6 L18.5,6 C18.7761424,6 19,5.77614237 19,5.5 L19,5 C19,4.72385763 18.7761424,4.5 18.5,4.5 L14,4.5 Z" fill="#000000" opacity="0.3"></path>
+                                                                </g>
+                                                            </svg>
+                                                        </span>
+                                                    </a>
+                                </div>
+                                </span>
+                                </td>
+                                </tr>
+                                {% endfor%}
+
+                                </tbody>
+                                </table>
+                            </div>
+                            <!--end: Datatable-->
+                        </div>
+                    </div>
+                    <form method="POST" action="/add-host-oid-trigger">
+                        <div class="card-body">
+                            <div class="form-group mb-8">
+                                <div class="alert alert-custom alert-default" role="alert">
+                                    <div class="alert-icon">
+                                        <span class="svg-icon svg-icon-primary svg-icon-xl">
                                                                                 <!--begin::Svg Icon | path:assets/media/svg/icons/Tools/Compass.svg-->
                                                                                 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
                                                                                     <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
@@ -141,38 +188,38 @@
                                                                                 </svg>
                                                                                 <!--end::Svg Icon-->
                                                                             </span>
-                                        </div>
-                                        <div class="alert-text">The example form below demonstrates common HTML form elements that receive updated styles from Bootstrap with additional classes.</div>
                                     </div>
+                                    <div class="alert-text">The example form below demonstrates common HTML form elements that receive updated styles from Bootstrap with additional classes.</div>
                                 </div>
-                                <input type="hidden" name="idHostOid" value="{{idHostOid}}" />
-                                <div class="form-group">
-                                    <label for="exampleSelect1">Notification
+                            </div>
+                            <input type="hidden" name="idHostOid" value="{{idHostOid}}" />
+                            <div class="form-group">
+                                <label for="exampleSelect1">Notification
                                     <span class="text-danger">*</span></label>
-                                    <select class="form-control" id="exampleSelect1" name="notification">
+                                <select class="form-control" id="exampleSelect1" name="notification">
                                         {% for notification in notifications %}
                                         <option value="{{notification[0]}}">{{notification[2]}}|{{notification[1]}}</option>
                                         {% endfor %}
                                     </select>
-                                </div>
-                                <div class="form-group">
-                                    <label for="exampleInputPassword1">Trigger
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleInputPassword1">Trigger
                                     <span class="text-danger">*</span></label>
-                                    <input type="text" name="trigger" class="form-control" placeholder="[[value]]" value="[[value]]" />
-                                </div>
+                                <input type="text" name="trigger" class="form-control" placeholder="[[value]]" value="[[value]]" />
                             </div>
-                            <div class="card-footer">
-                                <button type="submit" class="btn btn-primary mr-2">Submit</button>
-                                <button type="reset" class="btn btn-secondary">Cancel</button>
-                            </div>
-                        </form>
-                        <!--end::Form-->
-                    </div>
+                        </div>
+                        <div class="card-footer">
+                            <button type="submit" class="btn btn-primary mr-2">Submit</button>
+                            <button type="reset" class="btn btn-secondary">Cancel</button>
+                        </div>
+                    </form>
+                    <!--end::Form-->
                 </div>
             </div>
         </div>
-        <!--end::Container-->
     </div>
-    <!--end::Entry-->
+    <!--end::Container-->
+</div>
+<!--end::Entry-->
 </div>
 {% endblock %}
