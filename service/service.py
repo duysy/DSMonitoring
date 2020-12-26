@@ -33,24 +33,27 @@ class ClientThread(threading.Thread):
 
     def checkTrigger(self,idHostOid):
         sqline = sqLine.Sqline()
-        host_oid = sqline.raw("SELECT host_oid.id,oid.idOid,oid.name,oid.oid,oid.units,host_oid.value,host_oid.isWorking from host_oid INNER JOIN oid ON host_oid.idOid = oid.idOid WHERE host_oid.idHost='{}'".format(idHostOid))
+        host_oid = sqline.raw("SELECT host_oid.id,oid.idOid,oid.name,oid.oid,oid.units,host_oid.value,host_oid.isWorking from host_oid INNER JOIN oid ON host_oid.idOid = oid.idOid WHERE host_oid.id='{}'".format(idHostOid))
         sqline = sqLine.Sqline()
         trigger = sqline.raw("SELECT * from trigger WHERE idHostOid='{}'".format(idHostOid))
         valueOidHost = host_oid[0][5]
-        solve = eval(str(trigger[0][3]).replace("[[value]]",str(valueOidHost))) # return rule in trigger
-        if(not solve):
-            sqline = sqLine.Sqline()
-            notification = sqline.raw("SELECT * from notification WHERE id='{}'".format(str(trigger[0][2]))) #get info about notification
-            nameOid = host_oid[0][2]
-            valueOidHost = host_oid[0][5]
-            emailAddress = notification[0][4]
-            passwork = notification[0][5]
-            toEmail = notification[0][6]
-            smtpemail =SmtpEmail(emailAddress,passwork)
-            if(smtpemail.sendEmail(toEmail,nameOid,valueOidHost)):
-                id = uuid.uuid1()
+        if len(trigger) > 0: 
+            solve = eval(str(trigger[0][3]).replace("[[value]]",str(valueOidHost))) # return rule in trigger
+            print(host_oid[0][0],solve)
+            if(solve):
                 sqline = sqLine.Sqline()
-                sqline.execute("INSERT INTO history_notification(id,nameProblem,content,time) VALUES ('{}', '{}', '{}',NOW())".format(id,nameOid, valueOidHost))
+                notification = sqline.raw("SELECT * from notification WHERE id='{}'".format(str(trigger[0][2]))) #get info about notification
+                nameOid = host_oid[0][2]
+                valueOidHost = host_oid[0][5]
+                emailAddress = notification[0][4]
+                passwork = notification[0][5]
+                toEmail = notification[0][6]
+                print(nameOid,valueOidHost,emailAddress,passwork,toEmail)
+                smtpemail =SmtpEmail(emailAddress,passwork)
+                if(smtpemail.sendEmail(toEmail,nameOid,valueOidHost)):
+                    id = uuid.uuid1()
+                    sqline = sqLine.Sqline()
+                    sqline.execute("INSERT INTO history_notification(id,nameProblem,content,time) VALUES ('{}', '{}', '{}',NOW())".format(id,nameOid, valueOidHost))
 
     def oidIsWorking(self, result):
         if("No" not in str(result).split() and len(str(result))>0):
@@ -60,7 +63,7 @@ class ClientThread(threading.Thread):
         time.sleep(5)
         if self.ping.ping(self.host[2]):
             sqline = sqLine.Sqline()
-            sqline.execute("UPDATE host set activeAtatus = 1 where id = '{}'".format(self.host[0]))
+            sqline.execute("UPDATE host set activeAtatus = 1, lastTime='{}' where id = '{}'".format(time.time(),self.host[0]))
             self.getValueOid()
         else:
             sqline = sqLine.Sqline()
@@ -98,8 +101,7 @@ class Service:
                 value = str(result).split("=")[1].replace(" ", "")
                 sqline = sqLine.Sqline()
                 id = uuid.uuid1()
-                sqline.execute("INSERT INTO host_oid (id,idHost, idOid, value,isWorking) VALUES ( '{}','{}', '{}', '{}',{})".format(
-                    id, idHost, oid[0], value, 1))
+                sqline.execute("INSERT INTO host_oid (id,idHost, idOid, value,isWorking) VALUES ( '{}','{}', '{}', '{}',{})".format(id, idHost, oid[0], value, 1))
 
     def oidIsWorking(self, result):
         if("No" not in str(result).split() and len(str(result))>0):
