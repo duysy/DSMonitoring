@@ -79,12 +79,11 @@ class ClientThread(threading.Thread):
                 toEmail = "duyduysysy@gmail.com"
                 subject= "Cant connect to host"
                 content = "Cant connect to host with :{}".format(str(host[0]))
-                print(emailAddress,passwork,toEmail)
                 smtpemail =SmtpEmail(emailAddress,passwork)
                 if(smtpemail.sendEmail(toEmail,subject,content)):
-                    # id = uuid.uuid1()
-                    # sqline = sqLine.Sqline()
-                    # sqline.execute("INSERT INTO history_notification (id,nameProblem,content,time) VALUES ('{}', '{}', '{}','{}')".format(id,subject, content,time.time()))
+                    id = uuid.uuid1()
+                    sqline = sqLine.Sqline()
+                    sqline.execute("INSERT INTO history_notification (id,nameProblem,content,time) VALUES ('{}', '{}', '{}','{}')".format(id,subject, content,time.time()))
                     sqline = sqLine.Sqline()
                     sqline.execute("UPDATE host set activeAtatus = 0 , lastTime='{}' where id = '{}'".format(time.time(),self.host[0]))
         sqline = sqLine.Sqline()
