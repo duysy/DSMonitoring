@@ -82,9 +82,9 @@ class ClientThread(threading.Thread):
                 print(emailAddress,passwork,toEmail)
                 smtpemail =SmtpEmail(emailAddress,passwork)
                 if(smtpemail.sendEmail(toEmail,subject,content)):
-                    id = uuid.uuid1()
-                    sqline = sqLine.Sqline()
-                    sqline.execute("INSERT INTO history_notification (id,nameProblem,content,time) VALUES ('{}', '{}', '{}','{}')".format(id,subject, content,time.time()))
+                    # id = uuid.uuid1()
+                    # sqline = sqLine.Sqline()
+                    # sqline.execute("INSERT INTO history_notification (id,nameProblem,content,time) VALUES ('{}', '{}', '{}','{}')".format(id,subject, content,time.time()))
                     sqline = sqLine.Sqline()
                     sqline.execute("UPDATE host set activeAtatus = 0 , lastTime='{}' where id = '{}'".format(time.time(),self.host[0]))
         sqline = sqLine.Sqline()
