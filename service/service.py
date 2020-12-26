@@ -78,7 +78,7 @@ class ClientThread(threading.Thread):
                 passwork = "1h3j6n3j8l9n5k2h6j"
                 toEmail = "duyduysysy@gmail.com"
                 subject= "Cant connect to host"
-                content = "Cant connect to host with :{}".format(str(host[0]))
+                content = "Cant connect to host with :{}".format(str(host[0][1]))
                 smtpemail =SmtpEmail(emailAddress,passwork)
                 if(smtpemail.sendEmail(toEmail,subject,content)):
                     id = uuid.uuid1()
