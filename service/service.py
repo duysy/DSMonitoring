@@ -72,8 +72,8 @@ class ClientThread(threading.Thread):
         else:
             sqline = sqLine.Sqline()
             host = sqline.raw("SELECT * from host WHERE id='{}'".format(self.host[0]))
-            print(host[0][8])
-            # lastTimeHost = float(host[0][8])
+            lastTimeHost = 0 if host[0][8]==None else float(host[0][8])
+            print(lastTimeHost)
             # if time.time() - lastTimeHost > 1000:
             #     emailAddress = "duysyduysyduysy1@gmail.com"
             #     passwork = "1h3j6n3j8l9n5k2h6j"
