@@ -40,7 +40,11 @@ class ClientThread(threading.Thread):
         if len(trigger) > 0: 
             solve = eval(str(trigger[0][3]).replace("[[value]]",str(valueOidHost))) # return rule in trigger
             print(host_oid[0][0],solve)
-            if(solve):
+            lastTimeTrigger = int(trigger[0][4])
+            idTrigger=trigger[0][0]
+            if(solve and time.time() - lastTimeTrigger > 1000):
+                sqline = sqLine.Sqline()
+                sqline.execute("UPDATE trigger SET lastTime = '{}' WHERE id = '{}' ;".format(time.time(), idTrigger))
                 sqline = sqLine.Sqline()
                 notification = sqline.raw("SELECT * from notification WHERE id='{}'".format(str(trigger[0][2]))) #get info about notification
                 nameOid = host_oid[0][2]
@@ -53,7 +57,7 @@ class ClientThread(threading.Thread):
                 if(smtpemail.sendEmail(toEmail,nameOid,valueOidHost)):
                     id = uuid.uuid1()
                     sqline = sqLine.Sqline()
-                    sqline.execute("INSERT INTO history_notification(id,nameProblem,content,time) VALUES ('{}', '{}', '{}',NOW())".format(id,nameOid, valueOidHost))
+                    sqline.execute("INSERT INTO history_notification(id,nameProblem,content,time) VALUES ('{}', '{}', '{}','{}')".format(id,nameOid, valueOidHost,time.time()))
 
     def oidIsWorking(self, result):
         if("No" not in str(result).split() and len(str(result))>0):

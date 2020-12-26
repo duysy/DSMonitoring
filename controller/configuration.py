@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, redirect
 import uuid
+import time
 import sqLine
 from service.service import Service
 
@@ -98,7 +99,7 @@ class Configuration:
             trigger = request.form['trigger']
             sqline = sqLine.Sqline()
             print(id,idHostOid,trigger)
-            sqline.execute("INSERT INTO trigger(id,idHostOid,notification,trigger) VALUES ('{}', '{}', '{}','{}')".format(id,idHostOid, notification,trigger))
+            sqline.execute("INSERT INTO trigger(id,idHostOid,notification,trigger,lastTime) VALUES ('{}', '{}', '{}','{}','{}')".format(id,idHostOid, notification,trigger,time.time()))
             return redirect("/list-host-config")
         else:
             idHostOid = request.args.get('idHostOid')
