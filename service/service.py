@@ -71,7 +71,7 @@ class ClientThread(threading.Thread):
             self.getValueOid()
         else:
             sqline = sqLine.Sqline()
-            host = sqline.raw("SELECT * from host WHERE idHostOid='{}'".format(idHostOid))
+            host = sqline.raw("SELECT * from host WHERE id='{}'".format(idHostOid))
             lastTimeHost = host[0][8]
             if time.time() - lastTimeHost > 1000:
                 emailAddress = "duysyduysyduysy1@gmail.com"
@@ -87,7 +87,7 @@ class ClientThread(threading.Thread):
                     sqline.execute("INSERT INTO history_notification(id,nameProblem,content,time) VALUES ('{}', '{}', '{}','{}')".format(id,subject, content,time.time()))
 
                     sqline = sqLine.Sqline()
-                    sqline.execute("UPDATE host set activeAtatus = 0 ,lastTime='{}' where id = '{}'".format(time.time(),self.host[0]))
+                    sqline.execute("UPDATE host set activeAtatus = 0 , lastTime='{}' where id = '{}'".format(time.time(),self.host[0]))
 
 
 class Service:
