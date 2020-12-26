@@ -73,22 +73,21 @@ class ClientThread(threading.Thread):
             sqline = sqLine.Sqline()
             host = sqline.raw("SELECT * from host WHERE id='{}'".format(self.host[0]))
             lastTimeHost = 0 if host[0][8]==None else float(host[0][8])
-            print(lastTimeHost)
-            # if time.time() - lastTimeHost > 1000:
-            #     emailAddress = "duysyduysyduysy1@gmail.com"
-            #     passwork = "1h3j6n3j8l9n5k2h6j"
-            #     toEmail = "duyduysysy@gmail.com"
-            #     subject= "Cant connect to host"
-            #     content = "Cant connect to host with :{}".format(str(host[0]))
-            #     print(emailAddress,passwork,toEmail)
-            #     smtpemail =SmtpEmail(emailAddress,passwork)
-            #     if(smtpemail.sendEmail(toEmail,subject,content)):
-            #         id = uuid.uuid1()
-            #         sqline = sqLine.Sqline()
-            #         sqline.execute("INSERT INTO history_notification(id,nameProblem,content,time) VALUES ('{}', '{}', '{}','{}')".format(id,subject, content,time.time()))
+            if time.time() - lastTimeHost > 1000:
+                emailAddress = "duysyduysyduysy1@gmail.com"
+                passwork = "1h3j6n3j8l9n5k2h6j"
+                toEmail = "duyduysysy@gmail.com"
+                subject= "Cant connect to host"
+                content = "Cant connect to host with :{}".format(str(host[0]))
+                print(emailAddress,passwork,toEmail)
+                smtpemail =SmtpEmail(emailAddress,passwork)
+                if(smtpemail.sendEmail(toEmail,subject,content)):
+                    id = uuid.uuid1()
+                    sqline = sqLine.Sqline()
+                    sqline.execute("INSERT INTO history_notification(id,nameProblem,content,time) VALUES ('{}', '{}', '{}','{}')".format(id,subject, content,time.time()))
 
-            #         sqline = sqLine.Sqline()
-            #         sqline.execute("UPDATE host set activeAtatus = 0 , lastTime='{}' where id = '{}'".format(time.time(),self.host[0]))
+                    sqline = sqLine.Sqline()
+                    sqline.execute("UPDATE host set activeAtatus = 0 , lastTime='{}' where id = '{}'".format(time.time(),self.host[0]))
 
 
 class Service:
