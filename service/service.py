@@ -100,7 +100,7 @@ class Service:
         prosess.start()
     def run(self):
         while True:
-            time.sleep(5)
+            time.sleep(2)
             sqline = sqLine.Sqline()
             hosts = sqline.raw("SELECT * from host")
             for host in hosts:

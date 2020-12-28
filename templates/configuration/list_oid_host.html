@@ -177,8 +177,6 @@
             <div class="card card-custom gutter-b">
                 <div class="card-body">
                     <!--begin: Datatable-->
-
-
                     <div class="datatable datatable-bordered datatable-head-custom datatable-default datatable-primary datatable-loaded" id="kt_datatable" style="">
                         <table class="table">
                             <thead>
@@ -198,7 +196,7 @@
                                     <td>{{ oid[2] }}</td>
                                     <td>{{ oid[3] }}</td>
                                     <td>{{ oid[4] }}</td>
-                                    <td>{{ oid[5] }}</td>
+                                    <td><nav class="valueOid" id={{ oid[0] }}>{{ oid[5] }}</nav></td>
                                     <td>
                                         <a href="/add-host-oid-trigger?idHostOid={{ oid[0] }}">Add Trigger</a>
                                     </td>
@@ -262,4 +260,18 @@
 </div>
 <!--end::Entry-->
 </div>
+<script type="text/javascript">
+console.log("dasdas");
+var list = document.getElementsByClassName("valueOid");
+for (var i = 0; i < list.length; i++) {
+setInterval((i)=>{
+    fetch('http://localhost:5000/api-list-oid-host?id='+list[i].id)
+    .then(response => response.json())
+    .then((data) => {
+        list[i].innerText=data.data;
+    });
+}, 1000,i);
+}
+
+</script>
 {% endblock %}
