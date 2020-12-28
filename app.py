@@ -7,6 +7,7 @@ app = Flask(__name__, static_url_path='/assets', static_folder='assets')
 import sqLine
 configuration = Configuration()
 monitoring = Monitoring()
+api = Api()
 service = Service()
 
 
@@ -101,6 +102,10 @@ def login():
     else:
         return 'About page'
 
+#################################################################
+@app.route("/list-notification")
+def api_list_oid_host():
+    return api.api_list_oid_host()
 
 if __name__ == "__main__":
     service.start()
