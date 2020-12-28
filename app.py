@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request
 from controller.configuration import Configuration
 from controller.monitoring import Monitoring
+from controller.api import Api
 from service.service import Service
 
 app = Flask(__name__, static_url_path='/assets', static_folder='assets')
