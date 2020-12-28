@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect ,make_response
+from flask import Flask, render_template, request, redirect ,jsonify
 import uuid
 import time
 import sqLine
@@ -12,7 +12,7 @@ class Api:
         id = request.args.get('id')
         sqline = sqLine.Sqline()
         oids = sqline.raw("SELECT oid.idOid,oid.name,oid.oid,oid.units,host_oid.value,host_oid.isWorking from host_oid INNER JOIN oid ON host_oid.idOid = oid.idOid WHERE host_oid.id='{}'".format(id))
-        return Response(str(oids[0][4]), status=200,)
+		return jsonify({'data': str(oids[0][4])})
     def api_set_email_ping(self):
         return "hello"
 
