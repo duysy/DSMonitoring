@@ -104,7 +104,7 @@ def login():
         return 'About page'
 
 #################################################################
-@app.route("/list-notification")
+@app.route("/api-list-oid-host")
 def api_list_oid_host():
     return api.api_list_oid_host()
 
