@@ -18,7 +18,7 @@ class Api:
     def api_host_ping(self):
         id = request.args.get('id')
         sqline = sqLine.Sqline()
-        oids = sqline.raw( "SELECT activeAtatus from host WHERE host.id='{}'".format(id))
+        oids = sqline.raw( "SELECT * from host WHERE host.id='{}'".format(id))
         response = jsonify({'data': oids[0][7]})
         response.headers.add('Access-Control-Allow-Origin', '*')
         return response
