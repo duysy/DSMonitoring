@@ -108,6 +108,11 @@ def login():
 def api_list_oid_host():
     return api.api_list_oid_host()
 
+@app.route("/api-host-ping")
+def api_host_ping():
+    return api.api_host_ping()
+
+
 if __name__ == "__main__":
     service.start()
     app.run(host='0.0.0.0', debug=True)

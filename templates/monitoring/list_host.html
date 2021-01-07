@@ -204,7 +204,9 @@
                                     <td>{{ host[4] }}</td>
                                     <td>{{ host[4] }}</td>
                                     <td>{{ host[4] }}</td>
-                                    <td>{{ host[7] }}</td>
+                                    <td>
+                                        <nav class="valuePing" id={{ oid[0] }}>{{ oid[7] }}</nav>
+                                    </td>
                                     <td>
                                         <span style="overflow: visible; position: relative; width: 130px;">
                                             <div class="dropdown dropdown-inline">
@@ -286,4 +288,18 @@
     </div>
     <!--end::Entry-->
 </div>
+
+<script type="text/javascript">
+    console.log("dasdas");
+    var list = document.getElementsByClassName("valuePing");
+    for (var i = 0; i < list.length; i++) {
+        setInterval((i) => {
+            fetch('http://localhost:5000/api-host-ping?id=' + list[i].id)
+                .then(response => response.json())
+                .then((data) => {
+                    list[i].innerText = data.data;
+                });
+        }, 5000, i);
+    }
+</script>
 {% endblock %}
